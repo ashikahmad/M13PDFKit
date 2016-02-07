@@ -109,6 +109,10 @@
     [pageConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|" options:NSLayoutFormatAlignAllLeft metrics:nil views:@{@"superview": self.view, @"collectionView": _pageCollectionView}]];
     [self.view addConstraints:pageConstraints];
     
+    if (PDFKViewerModeRightToLeft) {
+        _pageCollectionView.transform = CGAffineTransformMakeScale(-1, 1);
+    }
+    
     //Create the navigation bar.
     _navigationToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44.0)];
     _navigationToolbar.delegate = self;
@@ -490,7 +494,7 @@
             
             //Left side
             if (CGRectContainsPoint(CGRectMake(0, 0, self.view.frame.size.width * .33, self.view.frame.size.height), touch)) {
-                [self previousPage];
+                PDFKViewerModeRightToLeft? [self nextPage]:[self previousPage];
                 
             } else if (CGRectContainsPoint(CGRectMake(self.view.frame.size.width * .33, 0, self.view.frame.size.width * .33, self.view.frame.size.height), touch)) {
                 //Center
@@ -498,7 +502,7 @@
                 
             } else {
                 //Right
-                [self nextPage];
+                PDFKViewerModeRightToLeft? [self previousPage]:[self nextPage];
             }
         }
     }

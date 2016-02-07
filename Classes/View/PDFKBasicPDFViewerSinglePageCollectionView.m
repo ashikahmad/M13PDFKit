@@ -53,9 +53,27 @@
     return self;
 }
 
+-(void)didMoveToSuperview {
+    [super didMoveToSuperview];
+    if (PDFKViewerModeRightToLeft) {
+        [self performSelector:@selector(gotoFirstPage) withObject:nil afterDelay:1.0];
+    }
+}
+
+-(void) gotoFirstPage {
+    [self displayPage:1 animated:NO];
+}
+
 - (void)displayPage:(NSUInteger)page animated:(BOOL)animated
 {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(page - 1) inSection:0];
+    if (PDFKViewerModeRightToLeft) {
+        NSInteger total = [self numberOfItemsInSection:0];
+        page = total - page;
+    } else {
+        page = page - 1;
+    }
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(page) inSection:0];
     [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:animated];
 }
 
@@ -83,6 +101,10 @@
     
     CGRect contentSize = CGRectZero;
     contentSize.size = [self collectionView:self layout:self.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    
+    if (PDFKViewerModeRightToLeft) {
+        cell.transform = CGAffineTransformMakeScale(-1, 1);
+    }
     
     //Get the page number
     NSInteger page = indexPath.row + 1;

@@ -141,6 +141,12 @@
 		[self updatePageNumberText:document.currentPage];
         
 		miniThumbViews = [NSMutableDictionary new]; // Small thumbs
+        
+        if (PDFKViewerModeRightToLeft) {
+            self.transform = CGAffineTransformMakeScale(-1, 1);
+            pageNumberLabel.transform = CGAffineTransformMakeScale(-1, 1);
+            trackControl.transform = CGAffineTransformMakeScale(-1, 1);
+        }
 	}
     
 	return self;
@@ -168,6 +174,10 @@
     
     //Only update frame if more than one page
 	if (pages > 1) {
+        if(PDFKViewerModeRightToLeft) {
+            page = document.pageCount - page + 1;
+        }
+        
 		CGFloat controlWidth = trackControl.bounds.size.width;
 		CGFloat useableWidth = (controlWidth - THUMB_LARGE_WIDTH);
         
@@ -409,7 +419,7 @@
     //Get the page number.
 	NSInteger page = (trackView.value / stride); // Integer page number
     
-	return (page + 1); // + 1
+    return PDFKViewerModeRightToLeft? (document.pageCount-page):(page + 1); // + 1
 }
 
 - (void)trackViewTouchDown:(PDFKPageScrubberTrackControl *)trackView
