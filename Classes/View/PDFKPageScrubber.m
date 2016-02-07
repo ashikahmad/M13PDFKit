@@ -143,8 +143,6 @@
 		miniThumbViews = [NSMutableDictionary new]; // Small thumbs
         
         if (PDFKViewerModeRightToLeft) {
-            self.transform = CGAffineTransformMakeScale(-1, 1);
-            pageNumberLabel.transform = CGAffineTransformMakeScale(-1, 1);
             trackControl.transform = CGAffineTransformMakeScale(-1, 1);
         }
 	}
@@ -174,11 +172,7 @@
     
     //Only update frame if more than one page
 	if (pages > 1) {
-        if(PDFKViewerModeRightToLeft) {
-            page = document.pageCount - page + 1;
-        }
-        
-		CGFloat controlWidth = trackControl.bounds.size.width;
+        CGFloat controlWidth = trackControl.bounds.size.width;
 		CGFloat useableWidth = (controlWidth - THUMB_LARGE_WIDTH);
         
         //Page stride
@@ -264,6 +258,10 @@
 		pageThumbView.layer.zPosition = 1.0f;
         //Add as the first subview of the track control
 		[trackControl addSubview:pageThumbView];
+        
+        if (PDFKViewerModeRightToLeft) {
+            pageThumbView.transform = CGAffineTransformMakeScale(-1, 1);
+        }
 	}
     
     //Update page thumb view
@@ -331,6 +329,10 @@
         
         //Next thumb X position
 		thumbRect.origin.x += thumbWidth;
+        
+        if (PDFKViewerModeRightToLeft) {
+            smallThumbView.transform = CGAffineTransformMakeScale(-1, 1);
+        }
 	}
     
     //Hide unused thumbs
@@ -419,7 +421,7 @@
     //Get the page number.
 	NSInteger page = (trackView.value / stride); // Integer page number
     
-    return PDFKViewerModeRightToLeft? (document.pageCount-page):(page + 1); // + 1
+    return (page + 1); // + 1
 }
 
 - (void)trackViewTouchDown:(PDFKPageScrubberTrackControl *)trackView

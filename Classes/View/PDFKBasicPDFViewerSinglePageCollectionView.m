@@ -66,12 +66,7 @@
 
 - (void)displayPage:(NSUInteger)page animated:(BOOL)animated
 {
-    if (PDFKViewerModeRightToLeft) {
-        NSInteger total = [self numberOfItemsInSection:0];
-        page = total - page;
-    } else {
-        page = page - 1;
-    }
+    page = page - 1;
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(page) inSection:0];
     [self scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:animated];
@@ -102,10 +97,6 @@
     CGRect contentSize = CGRectZero;
     contentSize.size = [self collectionView:self layout:self.collectionViewLayout sizeForItemAtIndexPath:indexPath];
     
-    if (PDFKViewerModeRightToLeft) {
-        cell.transform = CGAffineTransformMakeScale(-1, 1);
-    }
-    
     //Get the page number
     NSInteger page = indexPath.row + 1;
     
@@ -124,6 +115,9 @@
 {
     //Get the current page and notify the delegate
     NSUInteger page = (scrollView.contentOffset.x + scrollView.frame.size.width) / scrollView.frame.size.width;
+    if (PDFKViewerModeRightToLeft) {
+        page = self.document.pageCount - page + 1;
+    }
     
     [_singlePageDelegate singlePageCollectionView:self didDisplayPage:page];
 }
