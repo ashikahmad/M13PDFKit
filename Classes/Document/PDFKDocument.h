@@ -26,7 +26,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-static BOOL PDFKViewerModeRightToLeft = NO;
+// FIXME: Default should be NO
+static BOOL PDFKViewerModeRightToLeft = YES;
 
 /**
  A object that represents a single PDF File.
