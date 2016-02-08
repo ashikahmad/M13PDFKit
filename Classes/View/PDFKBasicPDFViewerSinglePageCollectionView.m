@@ -115,6 +115,7 @@
 {
     //Get the current page and notify the delegate
     NSUInteger page = (scrollView.contentOffset.x + scrollView.frame.size.width) / scrollView.frame.size.width;
+    
     if (PDFKViewerModeRightToLeft) {
         page = self.document.pageCount - page + 1;
     }
@@ -126,6 +127,10 @@
 {
     //Get the current page and notify the delegate
     NSUInteger page = (scrollView.contentOffset.x + scrollView.frame.size.width) / scrollView.frame.size.width;
+    
+    if (PDFKViewerModeRightToLeft) {
+        page = self.document.pageCount - page + 1;
+    }
     
     [_singlePageDelegate singlePageCollectionView:self didDisplayPage:page];
 }
